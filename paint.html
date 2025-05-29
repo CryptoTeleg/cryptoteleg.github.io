@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мій Інтерактивний Canvas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Стилі для шрифту та загального вигляду */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #e2e8f0; /* Сучасний, світлий сіро-блакитний фон */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        /* Стилі для контейнера canvas */
+        .canvas-container {
+            background-color: #ffffff; /* Чистий білий фон для контейнера */
+            border-radius: 16px; /* Більш заокруглені кути */
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08), 0 5px 10px rgba(0, 0, 0, 0.05); /* Глибша, сучасна тінь */
+            padding: 30px; /* Збільшений відступ */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            max-width: 95%; /* Максимальна ширина для адаптивності */
+            width: 800px; /* Базова ширина */
+            transition: transform 0.3s ease, box-shadow 0.3s ease; /* Плавний перехід */
+        }
+        .canvas-container:hover {
+            transform: translateY(-3px); /* Легкий ефект підняття при наведенні */
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12), 0 8px 15px rgba(0, 0, 0, 0.08);
+        }
+        /* Стилі для самого canvas */
+        canvas {
+            border: 1px solid #cbd5e0; /* М'яка сіра рамка */
+            background-color: #f8fafc; /* Дуже світлий сіро-блакитний фон всередині canvas */
+            border-radius: 12px; /* Заокруглені кути canvas */
+            cursor: crosshair; /* Курсор для малювання */
+            touch-action: none; /* Запобігає прокручуванню на сенсорних пристроях */
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05); /* Внутрішня тінь для ефекту вдавлення */
+        }
+        /* Стилі для кнопок */
+        .button {
+            /* Базові стилі Tailwind */
+            @apply px-8 py-3 mt-6 text-lg font-semibold rounded-full shadow-lg transition-all duration-300 ease-in-out;
+            
+            /* Сучасний градієнт */
+            background-image: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            color: white;
+            border: none;
+            cursor: pointer;
+            position: relative; /* Для ефекту бульбашок/світіння */
+            overflow: hidden; /* Обрізаємо все, що виходить за межі кнопки */
+            letter-spacing: 0.05em; /* Невеликий інтервал між літерами */
+        }
+        .button:hover {
+            background-image: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); /* Темніший градієнт при наведенні */
+            transform: translateY(-3px) scale(1.02); /* Більш виражений ефект підняття та легке збільшення */
+            box-shadow: 0 12px 25px rgba(99, 102, 241, 0.4), 0 4px 8px rgba(99, 102, 241, 0.2); /* Покращена тінь */
+        }
+        .button:active {
+            transform: translateY(0) scale(0.98); /* Ефект натискання */
+            box-shadow: 0 5px 10px rgba(99, 102, 241, 0.2);
+        }
+
+        /* Ефект світіння для кнопок */
+        .button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.2); /* Світлий відблиск */
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            transition: width 0.4s ease-out, height 0.4s ease-out, opacity 0.4s ease-out;
+        }
+
+        .button:hover::before {
+            width: 200%;
+            height: 200%;
+            opacity: 1;
+        }
+
+        /* Стилі для кнопки очищення - тепер фіолетова */
+        .clear-button {
+            background-image: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%); /* Фіолетовий градієнт */
+        }
+        .clear-button:hover {
+            background-image: linear-gradient(135deg, #7c3aed 0%, #9333ea 100%); /* Темніший фіолетовий при наведенні */
+            box-shadow: 0 12px 25px rgba(139, 92, 246, 0.4), 0 4px 8px rgba(139, 92, 246, 0.2); /* Тінь з кольором градієнта */
+        }
+        .clear-button:active {
+            transform: translateY(0) scale(0.98);
+            box-shadow: 0 5px 10px rgba(139, 92, 246, 0.2);
+        }
+        /* Ефект світіння для кнопки очищення - використовуємо той же псевдоелемент */
+        .clear-button::before {
+            background: rgba(255, 255, 255, 0.2); /* Світлий відблиск */
+        }
+
+        /* Стилі для input type="color" та input type="range" */
+        input[type="color"] {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            width: 48px; /* Збільшуємо розмір */
+            height: 48px; /* Збільшуємо розмір */
+            padding: 0;
+            border-radius: 50%;
+            overflow: hidden; /* Приховуємо стандартний квадратний вигляд */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease;
+        }
+        input[type="color"]:hover {
+            transform: scale(1.05);
+        }
+        input[type="color"]::-webkit-color-swatch-wrapper {
+            padding: 0;
+        }
+        input[type="color"]::-webkit-color-swatch {
+            border: none;
+            border-radius: 50%; /* Робимо круглий вибір кольору */
+        }
+        input[type="color"]::-moz-color-swatch-wrapper {
+            padding: 0;
+        }
+        input[type="color"]::-moz-color-swatch {
+            border: none;
+            border-radius: 50%;
+        }
+
+        input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 150px; /* Збільшуємо ширину */
+            height: 10px; /* Збільшуємо висоту */
+            background: #cbd5e0; /* Колір доріжки */
+            outline: none;
+            border-radius: 5px;
+            transition: background 0.2s ease;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px; /* Розмір повзунка */
+            height: 24px; /* Розмір повзунка */
+            background: #6366f1; /* Колір повзунка */
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            transition: background 0.2s ease, transform 0.2s ease;
+        }
+        input[type="range"]::-webkit-slider-thumb:hover {
+            background: #4f46e5;
+            transform: scale(1.1);
+        }
+        input[type="range"]::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            background: #6366f1;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            transition: background 0.2s ease, transform 0.2s ease;
+        }
+        input[type="range"]::-moz-range-thumb:hover {
+            background: #4f46e5;
+            transform: scale(1.1);
+        }
+        /* Стилі для відображення значення товщини лінії */
+        #lineWidthValue {
+            min-width: 50px; /* Забезпечуємо достатню ширину, щоб текст не "стрибав" */
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <div class="canvas-container">
+        <h1 class="text-4xl font-extrabold text-gray-800 mb-4">Малюй тут!</h1>
+        <p class="text-gray-600 mb-8 text-center max-w-md">Використовуй мишку або палець на сенсорному екрані, щоб малювати на полотні. Спробуй різні кольори та товщину ліній!</p>
+        <canvas id="myCanvas"></canvas>
+        <div class="flex flex-wrap justify-center items-center gap-6 mt-8">
+            <button id="clearButton" class="button clear-button">Очистити полотно</button>
+            <div class="flex items-center gap-2">
+                <label for="colorPicker" class="text-gray-700 text-lg font-medium sr-only">Вибрати колір:</label>
+                <input type="color" id="colorPicker" class="w-12 h-12 rounded-full border-2 border-gray-300 cursor-pointer p-0.5">
+            </div>
+            <div class="flex items-center gap-2">
+                <label for="lineWidthSlider" class="text-gray-700 text-lg font-medium sr-only">Товщина лінії:</label>
+                <input type="range" id="lineWidthSlider" min="1" max="20" value="5" class="w-32 h-12">
+                <span id="lineWidthValue" class="text-gray-700 text-lg font-medium self-center">5px</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Отримуємо посилання на елемент canvas та його 2D-контекст
+        const canvas = document.getElementById('myCanvas');
+        const ctx = canvas.getContext('2d');
+        // Отримуємо посилання на кнопку очищення та елементи керування
+        const clearButton = document.getElementById('clearButton');
+        const colorPicker = document.getElementById('colorPicker');
+        const lineWidthSlider = document.getElementById('lineWidthSlider');
+        const lineWidthValue = document.getElementById('lineWidthValue');
+
+        let isDrawing = false; // Змінна для відстеження, чи ми зараз малюємо
+        let lastX = 0;         // Остання координата X
+        let lastY = 0;         // Остання координата Y
+
+        // Функція для встановлення розміру canvas відповідно до розміру контейнера
+        function resizeCanvas() {
+            // Зберігаємо поточний вміст canvas перед зміною розміру
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+
+            // Встановлюємо ширину та висоту canvas на 80% від ширини вікна,
+            // але не більше 700px, щоб він виглядав добре на великих екранах.
+            // Висота встановлюється фіксовано, щоб уникнути надмірної розтягнутості.
+            const containerWidth = canvas.parentElement.clientWidth - 60; // Віднімаємо padding контейнера
+            canvas.width = Math.min(containerWidth, 700);
+            canvas.height = 400; // Фіксована висота для малювання
+            
+            // Відновлюємо вміст canvas після зміни розміру
+            ctx.putImageData(imageData, 0, 0);
+
+            // Налаштування стилю лінії
+            ctx.lineWidth = lineWidthSlider.value; // Товщина лінії з повзунка
+            ctx.lineCap = 'round';   // Закруглені кінці ліній
+            ctx.strokeStyle = colorPicker.value; // Колір лінії з вибору кольору
+        }
+
+        // Викликаємо resizeCanvas при завантаженні сторінки та при зміні розміру вікна
+        window.addEventListener('load', resizeCanvas);
+        window.addEventListener('resize', resizeCanvas);
+
+        // Функція для початку малювання
+        function startDrawing(e) {
+            isDrawing = true;
+            // Отримуємо координати початку малювання, враховуючи відступ canvas від краю сторінки
+            [lastX, lastY] = getCoordinates(e);
+        }
+
+        // Функція для малювання
+        function draw(e) {
+            if (!isDrawing) return; // Якщо не малюємо, виходимо
+
+            ctx.beginPath(); // Починаємо новий шлях
+            ctx.moveTo(lastX, lastY); // Переміщуємо курсор до останньої позиції
+            const [currentX, currentY] = getCoordinates(e); // Отримуємо поточні координати
+            ctx.lineTo(currentX, currentY); // Малюємо лінію до поточної позиції
+            ctx.stroke(); // Виконуємо малювання лінії
+
+            // Оновлюємо останні координати для наступного сегмента лінії
+            [lastX, lastY] = [currentX, currentY];
+        }
+
+        // Функція для зупинки малювання
+        function stopDrawing() {
+            isDrawing = false;
+        }
+
+        // Допоміжна функція для отримання координат з події (миша або дотик)
+        function getCoordinates(e) {
+            const rect = canvas.getBoundingClientRect(); // Отримуємо розміри та позицію canvas
+            let clientX, clientY;
+
+            if (e.touches) { // Якщо це сенсорний пристрій
+                clientX = e.touches[0].clientX;
+                clientY = e.touches[0].clientY;
+            } else { // Якщо це миша
+                clientX = e.clientX;
+                clientY = e.clientY;
+            }
+            // Перетворюємо координати відносно вікна на координати відносно canvas
+            return [clientX - rect.left, clientY - rect.top];
+        }
+
+        // Додаємо обробники подій для миші
+        canvas.addEventListener('mousedown', startDrawing);
+        canvas.addEventListener('mousemove', draw);
+        canvas.addEventListener('mouseup', stopDrawing);
+        canvas.addEventListener('mouseout', stopDrawing); // Зупиняємо малювання, якщо курсор виходить за межі canvas
+
+        // Додаємо обробники подій для сенсорних екранів
+        canvas.addEventListener('touchstart', startDrawing);
+        canvas.addEventListener('touchmove', draw);
+        canvas.addEventListener('touchend', stopDrawing);
+        canvas.addEventListener('touchcancel', stopDrawing);
+
+        // Обробник події для кнопки очищення
+        clearButton.addEventListener('click', () => {
+            ctx.clearRect(0, 0, canvas.width, canvas.height); // Очищаємо весь canvas
+        });
+
+        // Обробник зміни кольору
+        colorPicker.addEventListener('input', (e) => {
+            ctx.strokeStyle = e.target.value; // Змінюємо колір лінії
+        });
+
+        // Обробник зміни товщини лінії
+        lineWidthSlider.addEventListener('input', (e) => {
+            ctx.lineWidth = e.target.value; // Змінюємо товщину лінії
+            lineWidthValue.textContent = `${e.target.value}px`; // Оновлюємо відображення товщини
+        });
+
+        // Ініціалізація початкових значень для контексту малювання
+        ctx.lineWidth = lineWidthSlider.value;
+        ctx.lineCap = 'round';
+        ctx.strokeStyle = colorPicker.value;
+    </script>
+</body>
+</html>
