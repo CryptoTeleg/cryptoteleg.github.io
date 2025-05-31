@@ -6,7 +6,7 @@
     <title>Реєстрація у Web App</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Додаткові стилі, якщо потрібно */
+        /* Additional styles if needed */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
@@ -64,7 +64,7 @@
             </button>
         </form>
 
-        <div id="responseMessage" class="mt-6 p-4 bg-green-100 text-green-800 rounded-lg border border-green-200 text-sm text-center font-medium hidden">
+        <div id="responseMessage" class="mt-6 p-4 rounded-lg border text-sm text-center font-medium hidden">
             </div>
 
         <p class="mt-8 text-center text-sm text-gray-500">
@@ -76,13 +76,14 @@
     </div>
 
     <script>
-        // JavaScript для обробки форми та взаємодії з Telegram Web App
+        // JavaScript for form handling and interaction with Telegram Web App
         const registrationForm = document.getElementById('registrationForm');
         const responseMessage = document.getElementById('responseMessage');
         const telegramUserIdSpan = document.getElementById('telegramUserId');
         let telegramUserId = null;
 
-        // Ініціалізація Telegram Web App SDK
+        // Initialize Telegram Web App SDK
+        // This part is crucial for getting user data from Telegram
         if (window.Telegram && window.Telegram.WebApp) {
             window.Telegram.WebApp.ready();
             const user = window.Telegram.WebApp.initDataUnsafe?.user;
@@ -91,14 +92,17 @@
                 telegramUserIdSpan.textContent = user.id;
                 console.log("Telegram WebApp is ready. User ID:", user.id);
             } else {
-                console.log("Telegram WebApp is ready, but user data is not available.");
+                console.log("Telegram WebApp is ready, but user data is not available. Ensure HTTPS and correct BotFather URL.");
             }
         } else {
             console.log("Not running inside Telegram WebApp or Telegram.WebApp object is not available.");
+            // For local testing outside Telegram, you might manually set a dummy ID:
+            // telegramUserId = 12345;
+            // telegramUserIdSpan.textContent = "12345 (Dummy for local testing)";
         }
 
         registrationForm.addEventListener('submit', async (event) => {
-            event.preventDefault(); // Зупиняємо стандартну відправку форми
+            event.preventDefault(); // Prevent default form submission
 
             if (!telegramUserId) {
                 showMessage("Не вдалося отримати ID користувача Telegram. Спробуйте відкрити Web App через бота.", "red");
@@ -111,9 +115,9 @@
             showMessage('Відправка даних...', "blue");
 
             try {
-                // ЗАМІНІТЬ ЦЕЙ URL НА URL ВАШОГО БЕКЕНД-БОТА!
-                // Наприклад: 'https://your-bot-backend.herokuapp.com/register'
-                const BACKEND_URL = "http://localhost:5000/register"; // <--- Змініть на реальний URL бекенду
+                // REPLACE THIS URL WITH THE PUBLIC URL OF YOUR BOT'S BACKEND!
+                // Example: 'https://your-bot-backend.herokuapp.com/register'
+                const BACKEND_URL = "http://localhost:5000/register"; // <--- CHANGE THIS TO YOUR ACTUAL BACKEND URL!
 
                 const response = await fetch(BACKEND_URL, {
                     method: 'POST',
@@ -123,7 +127,7 @@
                     body: JSON.stringify({
                         login,
                         password,
-                        user_id: telegramUserId, // Передаємо ID користувача Telegram
+                        user_id: telegramUserId, // Pass Telegram User ID
                     }),
                 });
 
@@ -131,7 +135,7 @@
 
                 if (response.ok && data.success) {
                     showMessage(`Інформацію надіслано! Логін: "${login}". Бот отримав це. Перевірте чат бота.`, "green");
-                    // Опціонально, можна закрити Web App після успішної відправки
+                    // Optionally, you can close the Web App after successful submission
                     // if (window.Telegram && window.Telegram.WebApp) {
                     //   window.Telegram.WebApp.close();
                     // }
@@ -140,23 +144,24 @@
                 }
 
             } catch (error) {
-                console.error('Помилка при відправці даних:', error);
+                console.error('Error sending data:', error);
                 showMessage(`Сталася помилка при відправці даних: ${error.message}`, "red");
             }
 
-            // Очищаємо поля форми
+            // Clear form fields
             registrationForm.reset();
         });
 
+        // Helper function to display messages
         function showMessage(msg, type = "green") {
             responseMessage.textContent = msg;
-            responseMessage.classList.remove('hidden', 'bg-green-100', 'bg-red-100', 'bg-blue-100', 'text-green-800', 'text-red-800', 'text-blue-800');
+            responseMessage.classList.remove('hidden', 'bg-green-100', 'bg-red-100', 'bg-blue-100', 'text-green-800', 'text-red-800', 'text-blue-800', 'border-green-200', 'border-red-200', 'border-blue-200');
             if (type === "green") {
-                responseMessage.classList.add('bg-green-100', 'text-green-800');
+                responseMessage.classList.add('bg-green-100', 'text-green-800', 'border-green-200');
             } else if (type === "red") {
-                responseMessage.classList.add('bg-red-100', 'text-red-800');
+                responseMessage.classList.add('bg-red-100', 'text-red-800', 'border-red-200');
             } else if (type === "blue") {
-                responseMessage.classList.add('bg-blue-100', 'text-blue-800');
+                responseMessage.classList.add('bg-blue-100', 'text-blue-800', 'border-blue-200');
             }
         }
     </script>
