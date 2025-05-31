@@ -6,7 +6,6 @@
     <title>Реєстрація у Web App</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Additional styles if needed */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
@@ -76,33 +75,33 @@
     </div>
 
     <script>
-        // JavaScript for form handling and interaction with Telegram Web App
+        // JavaScript для обробки форми та взаємодії з Telegram Web App
         const registrationForm = document.getElementById('registrationForm');
         const responseMessage = document.getElementById('responseMessage');
         const telegramUserIdSpan = document.getElementById('telegramUserId');
         let telegramUserId = null;
 
-        // Initialize Telegram Web App SDK
-        // This part is crucial for getting user data from Telegram
+        // Ініціалізація Telegram Web App SDK
+        // Ця частина є критично важливою для отримання даних користувача від Telegram
         if (window.Telegram && window.Telegram.WebApp) {
             window.Telegram.WebApp.ready();
             const user = window.Telegram.WebApp.initDataUnsafe?.user;
             if (user) {
                 telegramUserId = user.id;
                 telegramUserIdSpan.textContent = user.id;
-                console.log("Telegram WebApp is ready. User ID:", user.id);
+                console.log("Telegram WebApp готовий. ID користувача:", user.id);
             } else {
-                console.log("Telegram WebApp is ready, but user data is not available. Ensure HTTPS and correct BotFather URL.");
+                console.log("Telegram WebApp готовий, але дані користувача недоступні. Переконайтеся, що використовується HTTPS і правильний URL BotFather.");
             }
         } else {
-            console.log("Not running inside Telegram WebApp or Telegram.WebApp object is not available.");
-            // For local testing outside Telegram, you might manually set a dummy ID:
+            console.log("Не запущено в Telegram WebApp або об'єкт Telegram.WebApp недоступний.");
+            // Для локального тестування поза Telegram можна вручну встановити фіктивний ID:
             // telegramUserId = 12345;
-            // telegramUserIdSpan.textContent = "12345 (Dummy for local testing)";
+            // telegramUserIdSpan.textContent = "12345 (Фіктивний для локального тестування)";
         }
 
         registrationForm.addEventListener('submit', async (event) => {
-            event.preventDefault(); // Prevent default form submission
+            event.preventDefault(); // Запобігаємо стандартній відправці форми
 
             if (!telegramUserId) {
                 showMessage("Не вдалося отримати ID користувача Telegram. Спробуйте відкрити Web App через бота.", "red");
@@ -112,12 +111,11 @@
             const login = document.getElementById('login').value;
             const password = document.getElementById('password').value;
 
-            showMessage('Відправка даних...', "blue");
+            showMessage('Відправлення даних...', "blue");
 
             try {
-                // REPLACE THIS URL WITH THE PUBLIC URL OF YOUR BOT'S BACKEND!
-                // Example: 'https://your-bot-backend.herokuapp.com/register'
-                const BACKEND_URL = "http://localhost:5000/register"; // <--- CHANGE THIS TO YOUR ACTUAL BACKEND URL!
+                // !!! ВАЖЛИВО: ЦЕЙ URL ВКАЗУЄ НА ВАШ РОЗГОРНУТИЙ БЕКЕНД НА RENDER.COM !!!
+                const BACKEND_URL = "https://registerbot-q8bi.onrender.com/register"; 
 
                 const response = await fetch(BACKEND_URL, {
                     method: 'POST',
@@ -127,7 +125,7 @@
                     body: JSON.stringify({
                         login,
                         password,
-                        user_id: telegramUserId, // Pass Telegram User ID
+                        user_id: telegramUserId, // Передаємо ID користувача Telegram
                     }),
                 });
 
@@ -135,7 +133,7 @@
 
                 if (response.ok && data.success) {
                     showMessage(`Інформацію надіслано! Логін: "${login}". Бот отримав це. Перевірте чат бота.`, "green");
-                    // Optionally, you can close the Web App after successful submission
+                    // За бажанням, можна закрити Web App після успішної відправки
                     // if (window.Telegram && window.Telegram.WebApp) {
                     //   window.Telegram.WebApp.close();
                     // }
@@ -144,15 +142,15 @@
                 }
 
             } catch (error) {
-                console.error('Error sending data:', error);
+                console.error('Помилка при відправці даних:', error);
                 showMessage(`Сталася помилка при відправці даних: ${error.message}`, "red");
             }
 
-            // Clear form fields
+            // Очищаємо поля форми
             registrationForm.reset();
         });
 
-        // Helper function to display messages
+        // Допоміжна функція для відображення повідомлень
         function showMessage(msg, type = "green") {
             responseMessage.textContent = msg;
             responseMessage.classList.remove('hidden', 'bg-green-100', 'bg-red-100', 'bg-blue-100', 'text-green-800', 'text-red-800', 'text-blue-800', 'border-green-200', 'border-red-200', 'border-blue-200');
