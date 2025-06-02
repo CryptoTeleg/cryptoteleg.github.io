@@ -3,75 +3,110 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Реєстрація у Web App</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Форма реєстрації</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f0f2f5;
+            margin: 0;
+            color: #333;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            box-sizing: border-box;
+            text-align: center;
+        }
+        h1 {
+            color: #1a1a1a;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 18px;
+            width: 100%;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #responseMessage {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 4px;
+            font-weight: bold;
+            display: none; /* Сховати за замовчуванням */
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border-color: #c3e6cb;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border-color: #f5c6cb;
+        }
+        .info {
+            margin-top: 15px;
+            font-size: 14px;
+            color: #555;
+        }
+        .info strong {
+            color: #000;
         }
     </style>
 </head>
-<body class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
-
-    <div class="bg-white p-8 rounded-xl shadow-2xl w-full max-w-md border border-blue-200">
-        <h1 class="text-3xl font-extrabold text-center text-gray-800 mb-8">Реєстрація у Web App</h1>
-
-        <form id="registrationForm" class="space-y-6">
-            <div>
-                <label for="login" class="block text-sm font-medium text-gray-700 mb-2">
-                    <div class="flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user w-5 h-5 text-blue-500 mr-2">
-                            <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
-                        </svg>
-                        Логін
-                    </div>
-                </label>
-                <input
-                    type="text"
-                    id="login"
-                    name="login"
-                    required
-                    class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-400"
-                    placeholder="Введіть ваш логін"
-                >
+<body>
+    <div class="container">
+        <h1>Реєстрація</h1>
+        <div class="info">
+            Ваш Telegram User ID: <strong id="telegramUserId">Невідомий (відкрийте через бота)</strong>
+        </div>
+        <form id="registrationForm">
+            <div class="form-group">
+                <label for="login">Логін:</label>
+                <input type="text" id="login" name="login" required>
             </div>
-
-            <div>
-                <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
-                    <div class="flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-lock w-5 h-5 text-blue-500 mr-2">
-                            <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-                        </svg>
-                        Пароль
-                    </div>
-                </label>
-                <input
-                    type="password"
-                    id="password"
-                    name="password"
-                    required
-                    class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-400"
-                    placeholder="Введіть ваш пароль"
-                >
+            <div class="form-group">
+                <label for="password">Пароль:</label>
+                <input type="password" id="password" name="password" required>
             </div>
-
-            <button
-                type="submit"
-                class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-lg text-lg font-semibold text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-300 ease-in-out transform hover:scale-105"
-            >
-                Зареєструватися
-            </button>
+            <button type="submit">Зареєструватися</button>
         </form>
-
-        <div id="responseMessage" class="mt-6 p-4 rounded-lg border text-sm text-center font-medium hidden">
-            </div>
-
-        <p class="mt-8 text-center text-sm text-gray-500">
-            Ваш Telegram User ID: <span id="telegramUserId">Невідомий (відкрийте через бота)</span>
-        </p>
-        <p class="mt-2 text-center text-xs text-gray-400">
-            Ця демонстрація відправляє дані на бекенд бота.
-        </p>
+        <div id="responseMessage"></div>
     </div>
 
     <script>
@@ -81,86 +116,86 @@
         const telegramUserIdSpan = document.getElementById('telegramUserId');
         let telegramUserId = null;
 
-        // Ініціалізація Telegram Web App SDK
-        // Ця частина є критично важливою для отримання даних користувача від Telegram
+        // ВАЖЛИВО: URL вашого бекенду на Render.com з "/register"
+        // ЗАМІНІТЬ 'YOUR_RENDER_BACKEND_URL' на https://registerbot-q8bi.onrender.com
+        const BACKEND_URL = "https://registerbot-q8bi.onrender.com/register"; // Ваш фактичний URL бекенду
+
+        // Ініціалізація Telegram Web App SDK та отримання ID користувача
         if (window.Telegram && window.Telegram.WebApp) {
-            window.Telegram.WebApp.ready();
+            window.Telegram.WebApp.ready(); // Сигналізуємо Telegram, що Web App готовий
+            
+            // Отримуємо дані користувача з initDataUnsafe
             const user = window.Telegram.WebApp.initDataUnsafe?.user;
+            
             if (user) {
                 telegramUserId = user.id;
                 telegramUserIdSpan.textContent = user.id;
                 console.log("Telegram WebApp готовий. ID користувача:", user.id);
             } else {
-                console.log("Telegram WebApp готовий, але дані користувача недоступні. Переконайтеся, що використовується HTTPS і правильний URL BotFather.");
+                telegramUserIdSpan.textContent = "Недоступний (відкрийте через бота)";
+                console.log("Telegram WebApp готовий, але дані користувача недоступні (initDataUnsafe.user відсутній). Переконайтеся, що використовується HTTPS і правильний URL Web App у BotFather.");
+                // Для локального тестування поза Telegram, можна вручну встановити фіктивний ID:
+                // telegramUserId = 12345;
+                // telegramUserIdSpan.textContent = "12345 (Фіктивний для локального тестування)";
             }
         } else {
+            telegramUserIdSpan.textContent = "Недоступний (не в середовищі Telegram Web App)";
             console.log("Не запущено в Telegram WebApp або об'єкт Telegram.WebApp недоступний.");
-            // Для локального тестування поза Telegram можна вручну встановити фіктивний ID:
+            // Для локального тестування поза Telegram, можна вручну встановити фіктивний ID:
             // telegramUserId = 12345;
             // telegramUserIdSpan.textContent = "12345 (Фіктивний для локального тестування)";
         }
 
+        // Обробка відправки форми
         registrationForm.addEventListener('submit', async (event) => {
-            event.preventDefault(); // Запобігаємо стандартній відправці форми
-
-            if (!telegramUserId) {
-                showMessage("Не вдалося отримати ID користувача Telegram. Спробуйте відкрити Web App через бота.", "red");
-                return;
-            }
+            event.preventDefault(); // Зупиняємо стандартну відправку форми
 
             const login = document.getElementById('login').value;
             const password = document.getElementById('password').value;
 
-            showMessage('Відправлення даних...', "blue");
+            // Перевірка, чи отримано Telegram User ID
+            if (!telegramUserId) {
+                displayMessage('Помилка: Telegram User ID не знайдено. Будь ласка, відкрийте форму через Telegram-бота.', 'error');
+                return;
+            }
 
             try {
-                // !!! ВАЖЛИВО: ЦЕЙ URL ВКАЗУЄ НА ВАШ РОЗГОРНУТИЙ БЕКЕНД НА RENDER.COM !!!
-                const BACKEND_URL = "https://registerbot-q8bi.onrender.com"; 
-
                 const response = await fetch(BACKEND_URL, {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json',
+                        'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        login,
-                        password,
-                        user_id: telegramUserId, // Передаємо ID користувача Telegram
-                    }),
+                        login: login,
+                        password: password,
+                        telegram_user_id: telegramUserId // Відправляємо ID на бекенд
+                    })
                 });
 
-                const data = await response.json();
+                const result = await response.json();
 
-                if (response.ok && data.success) {
-                    showMessage(`Інформацію надіслано! Логін: "${login}". Бот отримав це. Перевірте чат бота.`, "green");
-                    // За бажанням, можна закрити Web App після успішної відправки
+                if (response.ok) {
+                    displayMessage(`Успіх: ${result.message}`, 'success');
+                    registrationForm.reset(); // Очистити форму
+                    // Можна також закрити Web App після успішної реєстрації
                     // if (window.Telegram && window.Telegram.WebApp) {
-                    //   window.Telegram.WebApp.close();
+                    //     window.Telegram.WebApp.close();
                     // }
                 } else {
-                    showMessage(`Помилка: ${data.message || 'Невідома помилка при відправці даних.'}`, "red");
+                    displayMessage(`Помилка: ${result.message || 'Невідома помилка'}`, 'error');
                 }
-
             } catch (error) {
-                console.error('Помилка при відправці даних:', error);
-                showMessage(`Сталася помилка при відправці даних: ${error.message}`, "red");
+                console.error('Помилка під час відправки даних:', error);
+                displayMessage('Сталася помилка під час зв\'язку з сервером.', 'error');
             }
-
-            // Очищаємо поля форми
-            registrationForm.reset();
         });
 
-        // Допоміжна функція для відображення повідомлень
-        function showMessage(msg, type = "green") {
-            responseMessage.textContent = msg;
-            responseMessage.classList.remove('hidden', 'bg-green-100', 'bg-red-100', 'bg-blue-100', 'text-green-800', 'text-red-800', 'text-blue-800', 'border-green-200', 'border-red-200', 'border-blue-200');
-            if (type === "green") {
-                responseMessage.classList.add('bg-green-100', 'text-green-800', 'border-green-200');
-            } else if (type === "red") {
-                responseMessage.classList.add('bg-red-100', 'text-red-800', 'border-red-200');
-            } else if (type === "blue") {
-                responseMessage.classList.add('bg-blue-100', 'text-blue-800', 'border-blue-200');
-            }
+        // Функція для відображення повідомлень
+        function displayMessage(message, type) {
+            responseMessage.textContent = message;
+            responseMessage.className = ''; // Очистити попередні класи
+            responseMessage.classList.add(type); // Додати новий тип
+            responseMessage.style.display = 'block'; // Зробити видимим
         }
     </script>
 </body>
