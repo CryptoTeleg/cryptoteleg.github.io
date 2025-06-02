@@ -1,204 +1,129 @@
 <!DOCTYPE html>
 <html lang="uk">
 <head>
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6623599799572768"
-     crossorigin="anonymous"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Форма реєстрації</title>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <title>Реклама перед переходом</title>
+    <!-- Підключаємо Tailwind CSS для стилізації -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
+        /* Додаткові стилі для шрифту Inter */
         body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background-color: #f0f2f5;
-            margin: 0;
-            color: #333;
-        }
-        .container {
-            background-color: #ffffff;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 400px;
-            box-sizing: border-box;
-            text-align: center;
-        }
-        h1 {
-            color: #1a1a1a;
-            margin-bottom: 20px;
-        }
-        .form-group {
-            margin-bottom: 15px;
-            text-align: left;
-        }
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-        input[type="text"],
-        input[type="password"] {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-            font-size: 16px;
-        }
-        button {
-            background-color: #007bff;
-            color: white;
-            padding: 12px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 18px;
-            width: 100%;
-            transition: background-color 0.3s ease;
-        }
-        button:hover {
-            background-color: #0056b3;
-        }
-        #responseMessage {
-            margin-top: 20px;
-            padding: 10px;
-            border-radius: 4px;
-            font-weight: bold;
-            display: none; /* Сховати за замовчуванням */
-        }
-        .success {
-            background-color: #d4edda;
-            color: #155724;
-            border-color: #c3e6cb;
-        }
-        .error {
-            background-color: #f8d7da;
-            color: #721c24;
-            border-color: #f5c6cb;
-        }
-        .info {
-            margin-top: 15px;
-            font-size: 14px;
-            color: #555;
-        }
-        .info strong {
-            color: #000;
+            font-family: 'Inter', sans-serif;
         }
     </style>
+    <!-- Скрипт Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6623599799572768"
+     crossorigin="anonymous"></script>
 </head>
-<body>
-    <div class="container">
-        <h1>Реєстрація</h1>
-        <div class="info">
-            Ваш Telegram User ID: <strong id="telegramUserId">Невідомий (відкрийте через бота)</strong>
+<body class="bg-gradient-to-br from-blue-500 to-purple-600 min-h-screen flex items-center justify-center p-4">
+    <div id="app-container" class="bg-white p-8 rounded-xl shadow-2xl max-w-md w-full text-center transform transition-all duration-300 scale-100 opacity-100">
+        <!-- Заголовок сторінки -->
+        <h1 class="text-3xl font-bold text-gray-800 mb-6">
+            Зачекайте, будь ласка...
+        </h1>
+
+        <!-- Блок для відображення "реклами" -->
+        <div id="ad-content" class="mb-6">
+            <!-- Сюди ви повинні вставити код рекламного блоку Google AdSense. -->
+            <!-- Зазвичай це буде <ins class="adsbygoogle" ...></ins> та <script>(adsbygoogle = window.adsbygoogle || []).push({});</script> -->
+            <!-- Наприклад: -->
+            <!-- <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-6623599799572768"
+                 data-ad-slot="YOUR_AD_SLOT_ID"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script> -->
+            <p class="text-gray-700 text-sm">
+                Це місце для вашого рекламного контенту.
+                Вставте сюди код рекламного блоку Google AdSense, отриманий з вашого облікового запису.
+            </p>
+            <!-- Заглушка для візуалізації, якщо реальний AdSense код ще не вставлено -->
+            <img src="https://placehold.co/400x200/FFD700/000000?text=Ваша+Реклама+Тут"
+                 alt="Рекламний банер"
+                 class="w-full h-auto rounded-lg shadow-md mb-4"
+                 onerror="this.src='https://placehold.co/400x200/FFD700/000000?text=Помилка+завантаження+реклами';">
         </div>
-        <form id="registrationForm">
-            <div class="form-group">
-                <label for="login">Логін:</label>
-                <input type="text" id="login" name="login" required>
-            </div>
-            <div class="form-group">
-                <label for="password">Пароль:</label>
-                <input type="password" id="password" name="password" required>
-            </div>
-            <button type="submit">Зареєструватися</button>
-        </form>
-        <div id="responseMessage"></div>
+
+        <!-- Зворотний відлік -->
+        <p id="countdown" class="text-2xl font-semibold text-gray-800 mb-6">
+            Перенаправлення через <span id="timer" class="text-blue-600">5</span> секунд...
+        </p>
+
+        <!-- Кнопка "Пропустити рекламу" -->
+        <button id="skip-button"
+                class="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-lg shadow-lg
+                       transition-all duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-green-300">
+            Пропустити рекламу
+        </button>
+
+        <!-- Блок для повідомлень про помилки -->
+        <div id="error-message" class="hidden mt-6 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg" role="alert">
+            <p class="font-bold">Помилка:</p>
+            <p id="error-text"></p>
+        </div>
     </div>
 
     <script>
-        // JavaScript для обробки форми та взаємодії з Telegram Web App
-        const registrationForm = document.getElementById('registrationForm');
-        const responseMessage = document.getElementById('responseMessage');
-        const telegramUserIdSpan = document.getElementById('telegramUserId');
-        let telegramUserId = null;
+        // Очікуємо повного завантаження DOM
+        document.addEventListener('DOMContentLoaded', () => {
+            const timerElement = document.getElementById('timer');
+            const skipButton = document.getElementById('skip-button');
+            const errorMessageDiv = document.getElementById('error-message');
+            const errorTextElement = document.getElementById('error-text');
+            const appContainer = document.getElementById('app-container');
 
-        // ВАЖЛИВО: URL вашого бекенду на Render.com з "/register"
-        // ЗАМІНІТЬ 'YOUR_RENDER_BACKEND_URL' на https://registerbot-q8bi.onrender.com
-        const BACKEND_URL = "https://registerbot-q8bi.onrender.com/register"; // Ваш фактичний URL бекенду
+            // Отримуємо цільове посилання з параметрів URL
+            // Наприклад, якщо URL сторінки: yoursite.com/adpage.html?url=https://google.com
+            const urlParams = new URLSearchParams(window.location.search);
+            const targetUrl = urlParams.get('url'); // Отримуємо значення параметра 'url'
 
-        // Ініціалізація Telegram Web App SDK та отримання ID користувача
-        if (window.Telegram && window.Telegram.WebApp) {
-            window.Telegram.WebApp.ready(); // Сигналізуємо Telegram, що Web App готовий
-            
-            // Отримуємо дані користувача з initDataUnsafe
-            const user = window.Telegram.WebApp.initDataUnsafe?.user;
-            
-            if (user) {
-                telegramUserId = user.id;
-                telegramUserIdSpan.textContent = user.id;
-                console.log("Telegram WebApp готовий. ID користувача:", user.id);
-            } else {
-                telegramUserIdSpan.textContent = "Недоступний (відкрийте через бота)";
-                console.log("Telegram WebApp готовий, але дані користувача недоступні (initDataUnsafe.user відсутній). Переконайтеся, що використовується HTTPS і правильний URL Web App у BotFather.");
-                // Для локального тестування поза Telegram, можна вручну встановити фіктивний ID:
-                // telegramUserId = 12345;
-                // telegramUserIdSpan.textContent = "12345 (Фіктивний для локального тестування)";
-            }
-        } else {
-            telegramUserIdSpan.textContent = "Недоступний (не в середовищі Telegram Web App)";
-            console.log("Не запущено в Telegram WebApp або об'єкт Telegram.WebApp недоступний.");
-            // Для локального тестування поза Telegram, можна вручну встановити фіктивний ID:
-            // telegramUserId = 12345;
-            // telegramUserIdSpan.textContent = "12345 (Фіктивний для локального тестування)";
-        }
+            let countdownTime = 5; // Час зворотного відліку в секундах
+            let countdownInterval;
 
-        // Обробка відправки форми
-        registrationForm.addEventListener('submit', async (event) => {
-            event.preventDefault(); // Зупиняємо стандартну відправку форми
-
-            const login = document.getElementById('login').value;
-            const password = document.getElementById('password').value;
-
-            // Перевірка, чи отримано Telegram User ID
-            if (!telegramUserId) {
-                displayMessage('Помилка: Telegram User ID не знайдено. Будь ласка, відкрийте форму через Telegram-бота.', 'error');
-                return;
-            }
-
-            try {
-                const response = await fetch(BACKEND_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        login: login,
-                        password: password,
-                        telegram_user_id: telegramUserId // Відправляємо ID на бекенд
-                    })
-                });
-
-                const result = await response.json();
-
-                if (response.ok) {
-                    displayMessage(`Успіх: ${result.message}`, 'success');
-                    registrationForm.reset(); // Очистити форму
-                    // Можна також закрити Web App після успішної реєстрації
-                    // if (window.Telegram && window.Telegram.WebApp) {
-                    //     window.Telegram.WebApp.close();
-                    // }
+            // Функція для перенаправлення
+            function redirectToTarget() {
+                if (targetUrl) {
+                    window.location.href = targetUrl;
                 } else {
-                    displayMessage(`Помилка: ${result.message || 'Невідома помилка'}`, 'error');
+                    // Якщо цільове посилання не вказано, показуємо повідомлення про помилку
+                    appContainer.classList.remove('scale-100', 'opacity-100');
+                    appContainer.classList.add('scale-95', 'opacity-0');
+                    setTimeout(() => {
+                        appContainer.classList.add('hidden');
+                        errorMessageDiv.classList.remove('hidden');
+                        errorTextElement.textContent = 'Цільове посилання не вказано. Будь ласка, використовуйте формат: ?url=https://your-target-link.com';
+                    }, 300); // Затримка для анімації зникнення
                 }
-            } catch (error) {
-                console.error('Помилка під час відправки даних:', error);
-                displayMessage('Сталася помилка під час зв\'язку з сервером.', 'error');
             }
-        });
 
-        // Функція для відображення повідомлень
-        function displayMessage(message, type) {
-            responseMessage.textContent = message;
-            responseMessage.className = ''; // Очистити попередні класи
-            responseMessage.classList.add(type); // Додати новий тип
-            responseMessage.style.display = 'block'; // Зробити видимим
-        }
+            // Перевіряємо, чи є цільове посилання
+            if (!targetUrl) {
+                redirectToTarget(); // Показуємо помилку, якщо посилання немає
+                return; // Зупиняємо виконання скрипту
+            }
+
+            // Функція для оновлення зворотного відліку
+            function updateCountdown() {
+                countdownTime--;
+                timerElement.textContent = countdownTime;
+
+                if (countdownTime <= 0) {
+                    clearInterval(countdownInterval); // Зупиняємо відлік
+                    redirectToTarget(); // Перенаправляємо користувача
+                }
+            }
+
+            // Запускаємо зворотний відлік
+            countdownInterval = setInterval(updateCountdown, 1000);
+
+            // Обробник події для кнопки "Пропустити рекламу"
+            skipButton.addEventListener('click', () => {
+                clearInterval(countdownInterval); // Зупиняємо відлік
+                redirectToTarget(); // Перенаправляємо негайно
+            });
+        });
     </script>
 </body>
 </html>
