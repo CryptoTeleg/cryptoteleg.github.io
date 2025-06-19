@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>З 26-ю річницею, любі батьки!</title>
+    <!-- Завантажуємо Tailwind CSS для стилізації -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif; /* Використовуємо шрифт Inter */
+            background: linear-gradient(to bottom right, #f3e5f5, #e0f7fa); /* Ніжний градієнтний фон */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 1rem; /* Відступи для мобільних пристроїв */
+            color: #333;
+        }
+        .greeting-card {
+            background-color: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            padding: 2rem; /* Відступи для мобільних пристроїв */
+            max-width: 700px;
+            width: 100%;
+            text-align: center;
+            opacity: 0; /* Для анімації появи */
+            transform: translateY(20px); /* Для анімації появи */
+            animation: fadeInMoveUp 1s forwards ease-out;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Анімація для картки */
+        @keyframes fadeInMoveUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .greeting-card h1 {
+            font-size: 2rem; /* Адаптивний розмір заголовка для мобільних */
+            font-weight: 700;
+            color: #880e4f; /* Глибокий бордовий колір */
+            margin-bottom: 0.5rem; /* Зменшений відступ, якщо є підзаголовок */
+            line-height: 1.2;
+        }
+        @media (min-width: 640px) { /* Розмір для більших екранів */
+            .greeting-card h1 {
+                font-size: 2.5rem;
+            }
+        }
+
+        .greeting-card h2.subtitle { /* Стиль для підзаголовка */
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #d84315; /* Трохи інший колір для жартівливого тону */
+            margin-top: 0.5rem; /* Додано відступ зверху для підзаголовка після GIF */
+            margin-bottom: 1.5rem;
+        }
+        @media (min-width: 640px) {
+            .greeting-card h2.subtitle {
+                font-size: 1.8rem;
+            }
+        }
+
+        .gif-placeholder {
+            margin: 1.5rem auto; /* Відступи для GIF */
+            max-width: 100%;
+            height: auto; /* Дозволяє GIF масштабуватися */
+            display: block; /* Для центрування img */
+        }
+        /* Якщо GIF не завантажиться, можна показати заповнювач */
+        .gif-placeholder img {
+            width: 100%;
+            height: 200px; /* Висота заповнювача для GIF */
+            object-fit: contain;
+            background-color: #f0f0f0;
+            border-radius: 8px;
+            display: block;
+        }
+
+        .greeting-card p {
+            font-size: 1.125rem; /* Адаптивний розмір тексту для мобільних */
+            line-height: 1.6;
+            margin-bottom: 1.25rem;
+            color: #555;
+        }
+        @media (min-width: 640px) { /* Розмір для більших екранів */
+            .greeting-card p {
+                font-size: 1.25rem;
+            }
+        }
+
+        .decoration-icon {
+            position: absolute;
+            font-size: 2rem; /* Адаптивний розмір іконок */
+            color: #ffccbc; /* Світло-помаранчевий для декорацій */
+            opacity: 0.6;
+            z-index: 0;
+        }
+        @media (min-width: 640px) { /* Розмір для більших екранів */
+            .decoration-icon {
+                font-size: 3rem;
+            }
+        }
+        .top-left { top: 1rem; left: 1rem; transform: rotate(-15deg); }
+        .top-right { top: 1rem; right: 1rem; transform: rotate(15deg); }
+        .bottom-left { bottom: 1rem; left: 1rem; transform: rotate(15deg); }
+        .bottom-right { bottom: 1rem; right: 1rem; transform: rotate(-15deg); }
+
+        /* Додамо адаптацію для дуже маленьких екранів, щоб іконки не накладались */
+        @media (max-width: 400px) {
+            .decoration-icon {
+                font-size: 1.5rem; /* Ще менші іконки для дуже маленьких екранів */
+                opacity: 0.4;
+            }
+            .top-left, .top-right, .bottom-left, .bottom-right {
+                top: 0.5rem;
+                left: 0.5rem;
+                right: 0.5rem;
+                bottom: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="greeting-card">
+        <!-- Декоративні елементи (можна замінити на SVG або інші іконки) -->
+        <span class="decoration-icon top-left" aria-hidden="true">&#10084;</span> <!-- Сердечко -->
+        <span class="decoration-icon top-right" aria-hidden="true">&#127881;</span> <!-- Святковий хлопавка -->
+        <span class="decoration-icon bottom-left" aria-hidden="true">&#128149;</span> <!-- Два серця -->
+        <span class="decoration-icon bottom-right" aria-hidden="true">&#127874;</span> <!-- Торт -->
+
+        <h1 class="relative z-10">
+            З 26-ю річницею весілля, <br> наші найкрутіші Батьки!
+        </h1>
+
+        <!-- Місце для GIF-зображення -->
+        <div class="gif-placeholder relative z-10">
+            <!-- Вставте URL вашого GIF-зображення замість placehold.co -->
+            <img src="https://i.gifer.com/OfL.gif" alt="Святкова гіфка" onerror="this.onerror=null;this.src='https://placehold.co/400x200/cccccc/ffffff?text=Помилка+завантаження+GIF';">
+        </div>
+
+        <h2 class="subtitle relative z-10">
+            Що тут ще сказати? Молодці!
+        </h2>
+
+        <!-- Тут буде ваш новий оригінальний текст привітання -->
+        <!-- Замініть цей коментар на власні щирі слова -->
+
+        <!-- Підпис повністю видалено згідно з запитом -->
+
+    </div>
+
+</body>
+</html>
